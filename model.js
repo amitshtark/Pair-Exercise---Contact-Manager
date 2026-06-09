@@ -12,8 +12,6 @@ function loadContacts() {
   }
 }
 
-function createContactsJson() {}
-
 function saveContacts(contacts) {
   try {
     fs.writeFileSync(contactsPath, JSON.stringify(contacts, null, 2), "utf8");
