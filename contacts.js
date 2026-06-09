@@ -1,6 +1,5 @@
 const view = require("./view");
 const model = require("./model");
-const { error } = require("node:console");
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -10,23 +9,22 @@ switch (command) {
     const name = args[0];
     const email = args[1];
     const phone = args[2];
-
     try {
       model.validateContact(name, email, phone);
     } catch (err) {
-      view.showError(err.message);
       console.log('Usage: node contacts.js add "name" "email" "phone"');
       break;
     }
 
     view.showLoading("contacts.json");
-
+    let contacts;
     try {
-      const contacts = model.loadContacts();
+      contacts = model.loadContacts();
       view.showLoaded(contacts.length);
     } catch (err) {
       view.showError(err.message);
-      contacts = model.createContactsJson();
+      contacts = fileNotFound();
+
     }
 
     try {
@@ -59,13 +57,7 @@ switch (command) {
       console.log('Usage: node contacts.js search "query"');
       break;
     }
-    view.showLoading("contacts.json");
-    const { contacts, created } = model.loadContacts();
-    if (created) {
-      view.showFileNotFound();
-    } else {
-      view.showLoaded(contacts.length);
-    }
+    const contacts = getContacts();
     const results = model.searchContacts(contacts, query);
     view.showSearchResults(query, results);
     break;
@@ -78,13 +70,7 @@ switch (command) {
       console.log('Usage: node contacts.js delete "email"');
       break;
     }
-    view.showLoading("contacts.json");
-    const { contacts, created } = model.loadContacts();
-    if (created) {
-      view.showFileNotFound();
-    } else {
-      view.showLoaded(contacts.length);
-    }
+    const contacts = getContacts();
     try {
       const removed = model.deleteContact(contacts, email);
       view.showContactDeleted(removed.name);
@@ -105,4 +91,25 @@ switch (command) {
     console.log(
       "Usage: node contacts.js [add|list|search|delete|help] [arguments]",
     );
+}
+function fileNotFound() {
+  try {
+    model.saveContacts([]);
+    view.showError("File not found - creating new contact list");
+    return [];
+  } catch (error) {
+    view.showError(error.message);
+    return [];
+  }
+}
+function getContacts(){
+    view.showLoading("contacts.json");
+    try{
+      const contacts = model.loadContacts();
+      view.showLoaded(contacts.length);
+      return contacts;
+    }catch(err){
+      const contacts = fileNotFound();
+      return contacts;
+    }
 }
