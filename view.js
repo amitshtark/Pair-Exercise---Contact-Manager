@@ -2,6 +2,17 @@ function showLoading(fileName) {
   console.log(`Loading contacts from ${fileName}...`);
 }
 
+function showLoaded(count) {
+  console.log(`✓ Loaded ${count} contacts`);
+}
+
+function showContactDeleted(name) {
+  console.log(`✓ Contact deleted: ${name}`);
+}
+
+function showSaved() {
+  console.log("✓ Contacts saved to contacts.json");
+}
 function showError(message) {
   console.log(`✗ Error: ${message}`);
 }
@@ -53,6 +64,9 @@ Examples:
 }
 
 module.exports = {
+  showLoaded,
+  showContactDeleted,
+  showSaved,
   showLoading,
   showError,
   showSuccess,
