@@ -6,14 +6,13 @@ const contactsPath = path.join(__dirname, "contacts.json");
 function loadContacts() {
   try {
     const data = fs.readFileSync(contactsPath, "utf8");
-    return { contacts: JSON.parse(data), created: false };
+    return JSON.parse(data);
   } catch (error) {
-    if (error.code === "ENOENT") {
-      return { contacts: [], created: true };
-    }
     throw error;
   }
 }
+
+function createContactsJson() {}
 
 function saveContacts(contacts) {
   try {
