@@ -9,10 +9,16 @@ switch (command) {
     const name = args[0];
     const email = args[1];
     const phone = args[2];
+    if (!name || !email || !phone)
+    {
+      view.showError("Missing arguments for add command");
+      console.log('Usage: node contacts.js add "name" "email" "phone"');
+      break;
+    }
     try {
       model.validateContact(name, email, phone);
     } catch (err) {
-      console.log('Usage: node contacts.js add "name" "email" "phone"');
+      view.showError(err.message);
       break;
     }
 
@@ -22,7 +28,6 @@ switch (command) {
       contacts = model.loadContacts();
       view.showLoaded(contacts.length);
     } catch (err) {
-      view.showError(err.message);
       contacts = fileNotFound();
 
     }
