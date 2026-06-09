@@ -44,7 +44,8 @@ function deleteContact(contacts, email) {
 
 function searchContacts(contacts, query) {
   const q = query.toLowerCase();
-  return contacts.filter((c) => c.name.toLowerCase().includes(q));
+  return contacts.filter((c) => c.name.toLowerCase().includes(q) ||
+     c.email.toLowerCase().includes(q));
 }
 
 module.exports = {
